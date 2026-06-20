@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <meta name="theme-color" content="#faf8f5"/>
+  <meta name="description" content="Kado digital personal yang cantik — hadirkan momen berharga lewat pengalaman interaktif yang tak terlupakan."/>
+  <title>Bloem — Kado Digital Personal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&family=Lora:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/main.css"/>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       PHASE 1 · LOADING BLOOM SCREEN
+  ══════════════════════════════════════════ -->
+  <div id="phase-loading" class="phase phase--active">
+    <div class="bloom-loader">
+      <div class="bloom-loader__flower" id="bloomFlower">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- 6 petals, each revealed in sequence -->
+          <g class="bloom-petals">
+            <ellipse class="petal" cx="100" cy="60"  rx="14" ry="38" transform="rotate(0   100 100)" fill="#d4836e" opacity="0"/>
+            <ellipse class="petal" cx="100" cy="60"  rx="14" ry="38" transform="rotate(60  100 100)" fill="#c4715c" opacity="0"/>
+            <ellipse class="petal" cx="100" cy="60"  rx="14" ry="38" transform="rotate(120 100 100)" fill="#d4836e" opacity="0"/>
+            <ellipse class="petal" cx="100" cy="60"  rx="14" ry="38" transform="rotate(180 100 100)" fill="#c4715c" opacity="0"/>
+            <ellipse class="petal" cx="100" cy="60"  rx="14" ry="38" transform="rotate(240 100 100)" fill="#d4836e" opacity="0"/>
+            <ellipse class="petal" cx="100" cy="60"  rx="14" ry="38" transform="rotate(300 100 100)" fill="#c4715c" opacity="0"/>
+            <!-- inner petals -->
+            <ellipse class="petal petal--inner" cx="100" cy="72"  rx="8" ry="24" transform="rotate(30  100 100)" fill="#e8a898" opacity="0"/>
+            <ellipse class="petal petal--inner" cx="100" cy="72"  rx="8" ry="24" transform="rotate(90  100 100)" fill="#e8a898" opacity="0"/>
+            <ellipse class="petal petal--inner" cx="100" cy="72"  rx="8" ry="24" transform="rotate(150 100 100)" fill="#e8a898" opacity="0"/>
+            <ellipse class="petal petal--inner" cx="100" cy="72"  rx="8" ry="24" transform="rotate(210 100 100)" fill="#e8a898" opacity="0"/>
+            <ellipse class="petal petal--inner" cx="100" cy="72"  rx="8" ry="24" transform="rotate(270 100 100)" fill="#e8a898" opacity="0"/>
+            <ellipse class="petal petal--inner" cx="100" cy="72"  rx="8" ry="24" transform="rotate(330 100 100)" fill="#e8a898" opacity="0"/>
+            <!-- stamens -->
+            <circle class="stamen" cx="100" cy="100" r="18" fill="#9b4a38" opacity="0"/>
+            <circle class="stamen stamen--top" cx="100" cy="100" r="11" fill="#b8624e" opacity="0"/>
+            <circle class="stamen stamen--dot" cx="100" cy="100" r="5"  fill="#e8c4a0" opacity="0"/>
+          </g>
+        </svg>
+      </div>
+      <p class="bloom-loader__text">Bunganya sedang mekar…</p>
+      <div class="bloom-loader__bar">
+        <div class="bloom-loader__fill" id="loadFill"></div>
+      </div>
+      <span class="bloom-loader__pct" id="loadPct">0%</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PHASE 2 · UNLOCK SCREEN
+  ══════════════════════════════════════════ -->
+  <div id="phase-unlock" class="phase">
+    <div class="unlock-petals" aria-hidden="true" id="unlockPetals"></div>
+    <div class="unlock-content">
+      <div class="unlock-orbit" id="unlockOrbit">
+        <div class="orbit-ring orbit-ring--outer"></div>
+        <div class="orbit-ring orbit-ring--mid"></div>
+        <div class="orbit-ring orbit-ring--inner"></div>
+        <div class="orbit-core">
+          <div class="orbit-core__glow"></div>
+          <svg class="orbit-core__icon" viewBox="0 0 40 36" fill="none">
+            <path d="M20 33S3 22 3 11a9 9 0 0118 0 9 9 0 0118 0c0 11-17 22-19 22z" fill="#fff" opacity=".9"/>
+          </svg>
+        </div>
+        <!-- orbiting memory dots -->
+        <div class="orbit-satellites" id="orbitSatellites"></div>
+      </div>
+      <span class="unlock-label">Khusus untuk</span>
+      <h1 class="unlock-name">Amara</h1>
+      <p class="unlock-hint">Tekan tombol untuk membuka kadomu 🌸</p>
+      <button class="unlock-btn" id="unlockBtn" aria-label="Buka kado">
+        <span class="unlock-btn__text">Buka Kado</span>
+        <span class="unlock-btn__icon">→</span>
+      </button>
+    </div>
+    <!-- falling petals bg -->
+    <canvas class="petal-canvas" id="petalCanvas"></canvas>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PHASE 3 · MAIN GIFT EXPERIENCE
+  ══════════════════════════════════════════ -->
+  <main id="phase-main" class="phase">
+
+    <!-- ── HERO: ORBIT SECTION ────────────────── -->
+    <section class="hero-section" id="heroSection">
+      <div class="hero-bg">
+        <div class="hero-bg__radial"></div>
+        <div class="hero-bg__grain"></div>
+      </div>
+
+      <div class="orbit-scene">
+        <div class="orbit-scene__rings" aria-hidden="true">
+          <div class="scene-ring scene-ring--1"><div class="scene-ring__dot"></div></div>
+          <div class="scene-ring scene-ring--2"><div class="scene-ring__dot scene-ring__dot--gold"></div></div>
+          <div class="scene-ring scene-ring--3"><div class="scene-ring__dot scene-ring__dot--blush"></div></div>
+        </div>
+
+        <div class="orbit-scene__core">
+          <div class="core-pulse"></div>
+          <div class="core-pulse core-pulse--2"></div>
+          <div class="core-heart">
+            <svg viewBox="0 0 40 36" fill="none"><path d="M20 33S3 22 3 11a9 9 0 0118 0 9 9 0 0118 0c0 11-17 22-19 22z" fill="currentColor"/></svg>
+          </div>
+        </div>
+
+        <!-- Photo thumbnails orbiting -->
+        <div class="orbit-scene__photos" id="orbitPhotos">
+          <div class="orbit-photo orbit-photo--1">
+            <div class="orbit-photo__img" style="background:linear-gradient(135deg,#f2c0b8,#e89080)">
+              <span>📸</span>
+            </div>
+          </div>
+          <div class="orbit-photo orbit-photo--2">
+            <div class="orbit-photo__img" style="background:linear-gradient(135deg,#f7e0d8,#ebbdaf)">
+              <span>🌸</span>
+            </div>
+          </div>
+          <div class="orbit-photo orbit-photo--3">
+            <div class="orbit-photo__img" style="background:linear-gradient(135deg,#fce8e0,#f0c8bc)">
+              <span>💌</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-text" id="heroText">
+        <span class="hero-text__eyebrow">Untuk yang tersayang</span>
+        <h2 class="hero-text__name">Amara <em>✨</em></h2>
+        <p class="hero-text__tagline">Sebuah dunia kecil yang kubuat hanya untukmu</p>
+      </div>
+
+      <div class="hero-scroll-hint" id="scrollHint">
+        <span>Gulir untuk membuka</span>
+        <div class="scroll-arrow">
+          <div class="scroll-arrow__line"></div>
+          <div class="scroll-arrow__head"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHAPTER 1: MOMEN KITA ───────────────── -->
+    <section class="chapter chapter--memories" data-chapter="1">
+      <div class="chapter__inner">
+        <header class="chapter__header reveal-up">
+          <span class="chapter__eyebrow">Kenangan kita</span>
+          <h2 class="chapter__title">Dunia kecil kita</h2>
+        </header>
+
+        <div class="photo-mosaic reveal-up" style="--delay:.15s">
+          <!-- Large featured photo -->
+          <div class="photo-tile photo-tile--featured">
+            <div class="photo-tile__media" style="background:linear-gradient(145deg,#f5cec8 0%,#e8a090 100%)">
+              <div class="photo-tile__placeholder">
+                <div class="photo-icon">📷</div>
+                <span>Foto Kenangan 1</span>
+              </div>
+            </div>
+            <div class="photo-tile__caption">Momen pertama yang selalu kuingat</div>
+          </div>
+
+          <!-- Small photos grid -->
+          <div class="photo-tile photo-tile--sm">
+            <div class="photo-tile__media" style="background:linear-gradient(145deg,#fce4dc 0%,#f0c0b0 100%)">
+              <div class="photo-tile__placeholder"><div class="photo-icon">🌷</div><span>Foto 2</span></div>
+            </div>
+          </div>
+          <div class="photo-tile photo-tile--sm">
+            <div class="photo-tile__media" style="background:linear-gradient(145deg,#faeae4 0%,#f2d0c4 100%)">
+              <div class="photo-tile__placeholder"><div class="photo-icon">💕</div><span>Foto 3</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive memory tags -->
+        <div class="memory-tags reveal-up" style="--delay:.3s">
+          <p class="memory-tags__hint">Pencet tiap kenangan di bawah ini 💌</p>
+          <div class="memory-tags__list" id="memoryTagsList">
+            <button class="mem-tag" data-msg="Saat pertama kita ketemu, ada sesuatu yang langsung berbeda. Senyummu membuat duniaku berhenti sejenak dan aku tahu — ini spesial. 🌞">✨ Pertama ketemu</button>
+            <button class="mem-tag" data-msg="Ngobrol sampai hampir subuh, lupa waktu, lupa lelah. Hanya ada kamu, aku, dan bintang-bintang di langit malam. 🌙">🌙 Ngobrol sampai pagi</button>
+            <button class="mem-tag" data-msg="Tertawa bersama adalah obat paling ajaib yang pernah kutemukan. Tidak ada yang bisa membuatku tertawa seperti caramu. 😂">😂 Ketawa bareng</button>
+            <button class="mem-tag" data-msg="Di saat paling gelap sekalipun, kamu selalu hadir dengan cahaya kecilmu. Itu yang membuatku semakin sayang. 🤍">🤍 Selalu ada</button>
+            <button class="mem-tag" data-msg="Perjalanan kita bersama adalah halaman-halaman terbaik dari cerita hidupku. Semoga masih banyak bab yang belum ditulis. 🗺️">🗺️ Perjalanan kita</button>
+          </div>
+          <div class="memory-popup" id="memoryPopup" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHAPTER 2: SURAT ────────────────────── -->
+    <section class="chapter chapter--letter" data-chapter="2">
+      <div class="chapter__inner">
+        <header class="chapter__header reveal-up">
+          <span class="chapter__eyebrow">Dari hatiku</span>
+          <h2 class="chapter__title">Surat untukmu</h2>
+        </header>
+
+        <div class="letter-envelope-wrap reveal-up" style="--delay:.1s" id="letterWrap">
+          <div class="letter-envelope" id="letterEnvelope">
+            <div class="letter-envelope__front">
+              <div class="envelope-icon-wrap">
+                <svg viewBox="0 0 64 64" fill="none" class="envelope-svg">
+                  <rect x="4" y="12" width="56" height="40" rx="6" fill="#c4715c" opacity=".15"/>
+                  <rect x="4" y="12" width="56" height="40" rx="6" stroke="#c4715c" stroke-width="1.5"/>
+                  <path d="M4 18l28 18 28-18" stroke="#c4715c" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M4 52l18-14M60 52L42 38" stroke="#c4715c" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+                  <path d="M32 44a4 4 0 100-8 4 4 0 000 8z" fill="#c4715c" opacity=".4"/>
+                </svg>
+              </div>
+              <p class="envelope-label">Sentuh untuk membuka surat</p>
+              <div class="envelope-seal">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-9-5.5-9-11a6 6 0 0112 0 6 6 0 0112 0c0 5.5-9 11-9 11z" fill="#c4715c"/></svg>
+              </div>
+            </div>
+            <div class="letter-envelope__back">
+              <div class="letter-paper">
+                <div class="letter-paper__deco" aria-hidden="true">❝</div>
+                <p class="letter-paper__greeting">Amara sayang,</p>
+                <div class="letter-paper__body">
+                  <p>Ada banyak kata yang ingin kusampaikan, namun tiap kali kucoba, rasanya selalu kurang. Kehadiranmu dalam hidupku bukan sekadar kebetulan — kamu adalah jawaban dari doa yang bahkan belum sempat kuucap.</p>
+                  <p>Setiap hari bersamamu adalah petualangan kecil yang membuat hidupku penuh warna. Kamu mengajarkanku cara tertawa lebih keras, mencintai lebih dalam, dan menghargai hal-hal yang dulu terlewatkan.</p>
+                  <p>Kado ini bukan soal materi. Ini adalah cara termudah yang kutemukan untuk mengatakan: <em>kamu berarti sangat besar untukku.</em></p>
+                </div>
+                <div class="letter-paper__sig">
+                  <div class="sig-line"></div>
+                  <span>Dengan sepenuh cinta 🌹</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHAPTER 3: MUSIK ────────────────────── -->
+    <section class="chapter chapter--music" data-chapter="3">
+      <div class="chapter__inner">
+        <header class="chapter__header reveal-up">
+          <span class="chapter__eyebrow">Melodi hati</span>
+          <h2 class="chapter__title">Lagu yang mengingatkanku padamu</h2>
+        </header>
+
+        <div class="music-player reveal-up" style="--delay:.1s" id="musicPlayer">
+          <div class="music-player__vinyl" id="vinylDisc">
+            <div class="vinyl-grooves"></div>
+            <div class="vinyl-label">
+              <div class="vinyl-label__inner">🎵</div>
+            </div>
+            <div class="vinyl-shine"></div>
+          </div>
+
+          <div class="music-player__info">
+            <div class="music-track">
+              <span class="music-track__title">Lagu Kita Berdua</span>
+              <span class="music-track__artist">Melodi Hati — Original</span>
+            </div>
+
+            <div class="music-waveform" id="waveform">
+              <div class="waveform-bars" id="waveformBars"></div>
+            </div>
+
+            <div class="music-controls">
+              <button class="music-btn music-btn--prev" aria-label="Sebelumnya">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+              </button>
+              <button class="music-btn music-btn--play" id="playBtn" aria-label="Putar lagu">
+                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+              </button>
+              <button class="music-btn music-btn--next" aria-label="Berikutnya">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2.5-6l5.5 3.92V8.08L8.5 12zM16 6h2v12h-2z"/></svg>
+              </button>
+            </div>
+
+            <div class="music-progress">
+              <span class="music-time" id="currentTime">0:00</span>
+              <div class="music-progress__bar" id="progressBar">
+                <div class="music-progress__fill" id="progressFill"></div>
+                <div class="music-progress__thumb" id="progressThumb"></div>
+              </div>
+              <span class="music-time" id="totalTime">3:24</span>
+            </div>
+
+            <div class="music-links">
+              <a href="#" class="music-link music-link--spotify" onclick="return false">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 01-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.622.622 0 01-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 01.207.857zm1.223-2.72a.779.779 0 01-1.072.257c-2.687-1.652-6.785-2.13-9.965-1.166a.78.78 0 01-.966-.519.78.78 0 01.519-.966c3.632-1.102 8.147-.568 11.228 1.323a.78.78 0 01.256 1.072zm.105-2.83c-3.223-1.914-8.54-2.09-11.618-1.156a.935.935 0 11-.543-1.79c3.532-1.072 9.404-.865 13.115 1.338a.935.935 0 01-.954 1.608z"/></svg>
+                Dengar di Spotify
+              </a>
+              <a href="#" class="music-link music-link--youtube" onclick="return false">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                Tonton di YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHAPTER 4: BUKET FINALE ─────────────── -->
+    <section class="chapter chapter--bouquet" data-chapter="4" id="bouquetSection">
+      <div class="bouquet-petals-bg" id="bouquetPetalsBg" aria-hidden="true"></div>
+
+      <div class="chapter__inner">
+        <div class="bouquet-reveal" id="bouquetReveal">
+          <div class="bouquet-icon-wrap reveal-up">
+            <div class="bouquet-float">
+              <!-- hand-drawn style SVG bouquet -->
+              <svg class="bouquet-svg" viewBox="0 0 160 200" fill="none">
+                <!-- stems -->
+                <path d="M80 190 C76 160 68 130 72 100" stroke="#7a9060" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M80 190 C84 158 92 128 88 98"  stroke="#7a9060" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M80 190 C80 155 80 125 80 95"  stroke="#6b8050" stroke-width="2"   stroke-linecap="round"/>
+                <!-- leaves -->
+                <ellipse cx="70" cy="145" rx="10" ry="5" fill="#8aa568" transform="rotate(-30 70 145)"/>
+                <ellipse cx="90" cy="138" rx="10" ry="5" fill="#8aa568" transform="rotate(30  90 138)"/>
+                <!-- flowers -->
+                <g transform="translate(48,72)">
+                  <circle r="18" fill="#e89080"/><circle r="11" fill="#c4705c"/><circle r="6" fill="#f0c090"/>
+                </g>
+                <g transform="translate(80,52)">
+                  <circle r="22" fill="#d4836e"/><circle r="14" fill="#b85a48"/><circle r="7" fill="#f0c090"/>
+                </g>
+                <g transform="translate(112,70)">
+                  <circle r="18" fill="#e89080"/><circle r="11" fill="#c4705c"/><circle r="6" fill="#f0c090"/>
+                </g>
+                <g transform="translate(62,42)">
+                  <circle r="14" fill="#f0c0b0"/><circle r="8"  fill="#d8907a"/><circle r="4" fill="#f8d8c0"/>
+                </g>
+                <g transform="translate(98,40)">
+                  <circle r="14" fill="#f0c0b0"/><circle r="8"  fill="#d8907a"/><circle r="4" fill="#f8d8c0"/>
+                </g>
+                <!-- small buds -->
+                <ellipse cx="45" cy="92"  rx="6" ry="9" fill="#e0a898" transform="rotate(-20 45 92)"/>
+                <ellipse cx="115" cy="88" rx="6" ry="9" fill="#e0a898" transform="rotate(20 115 88)"/>
+                <!-- ribbon -->
+                <path d="M65 180 Q80 175 95 180" stroke="#c4715c" stroke-width="3" stroke-linecap="round" fill="none"/>
+                <path d="M70 178 Q80 168 72 165 Q65 170 70 178z" fill="#d4836e" opacity=".8"/>
+                <path d="M90 178 Q80 168 88 165 Q95 170 90 178z" fill="#d4836e" opacity=".8"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="bouquet-message reveal-up" style="--delay:.2s">
+            <h2 class="bouquet-message__title">Untukmu, selalu</h2>
+            <p class="bouquet-message__text">
+              Seperti buket bunga yang mekar di musim semi — cintaku untukmu selalu segar, selalu harum, selalu tulus. Terima kasih telah menjadi bagian terindah dari hidupku.
+            </p>
+          </div>
+
+          <div class="bouquet-flowers-row reveal-up" style="--delay:.35s">
+            <div class="flower-chip" style="--i:0">🌹 Mawar Merah</div>
+            <div class="flower-chip" style="--i:1">🌸 Sakura</div>
+            <div class="flower-chip" style="--i:2">🌷 Tulip</div>
+            <div class="flower-chip" style="--i:3">💮 Bunga Putih</div>
+            <div class="flower-chip" style="--i:4">🌺 Kamboja</div>
+          </div>
+
+          <button class="confetti-btn reveal-up" style="--delay:.5s" id="confettiBtn">
+            <span>🎉</span> Rayakan Bersama
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ──────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="footer-brand">
+          <span class="footer-brand__logo">🌸</span>
+          <span class="footer-brand__name">Bloem</span>
+        </div>
+        <p class="footer-tagline">Kado digital personal yang tumbuh dari hati</p>
+        <p class="footer-copy">Dibuat dengan <span class="footer-heart">💗</span> — Bloem Digital Studio</p>
+      </div>
+    </footer>
+
+  </main><!-- /phase-main -->
+
+  <!-- Confetti canvas -->
+  <canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
